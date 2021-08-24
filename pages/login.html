@@ -4,9 +4,34 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Cowin automation</title>
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+    <link rel="stylesheet" href="./src/style.css">
+    <title>Document</title>
 </head>
 <body>
-<h1>Hello World</h1>
+    <div class="login-card">
+        <h1 class="app-name">Let's Win COVID</h1>
+        <p class="description">Get COVID vaccine slot availability sent to you based on your location</p>
+        <form class="form" id="login" action="profile.html" method="POST">
+            <div class="login-error-message"></div>
+            <div class="form__input-group">
+                <input type="text" name="name" class="form__input" autofocus placeholder="Username" required>
+            </div>
+            <div class="form__input-group">
+                <input type="number" class="form__input" name="age" placeholder="Enter your age" required min="1" max="200">
+            </div>
+            <div class="form__input-group">
+                <input type="email" class="form__input" name="email" placeholder="Enter valid Email" required>
+            </div>
+            <div class="form__input-group">
+                <input type="password" class="form__input" name="password" placeholder="Password" required>
+            </div>
+
+            <div class="form__input-group" id="location"></div>
+            <input type="hidden" name="pincode" id="locationpin"></input>
+            <button class="form__button" type="submit">Login</button>
+        </form>
+        <script src="./src/script.js"></script>
+    </div>
 </body>
 </html>
