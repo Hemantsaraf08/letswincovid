@@ -1,24 +1,116 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
-    <link rel="stylesheet" href="./src/style.css">
+    <style>
+        body {
+            --color-primary: #009579;
+            --color-primary-dark: #007f67;
+            --color-secondary: #252c6a;
+            --color-error: #cc3333;
+            --color-success: #4bb544;
+            --border-radius: 6px;
+
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 18px;
+            background: var(--color-primary);
+        }
+
+        .login-card {
+            width: 400px;
+            max-width: 400px;
+            margin: 1rem;
+            padding: 2rem;
+            box-shadow: 0 0 40px rgba(0, 0, 0, 0.2);
+            border-radius: var(--border-radius);
+            background: #ffffff;
+        }
+
+        .login-card,
+        .form__input,
+        .form__button {
+            font: 500 1rem 'Quicksand', sans-serif;
+        }
+
+        .description {
+            font: 1.25rem Georgia, serif;
+            text-align: center;
+        }
+
+        .app-name {
+            text-align: center;
+        }
+
+        .form__input-group {
+            margin-bottom: .6rem;
+        }
+
+        .form__input {
+            text-align: center;
+            display: block;
+            width: 100%;
+            padding: 0.75rem;
+            box-sizing: border-box;
+            border-radius: var(--border-radius);
+            border: 1px solid #dddddd;
+            outline: none;
+            background: #eeeeee;
+            transition: background 0.2s, border-color 0.2s;
+        }
+
+        .form__input:focus {
+            border-color: var(--color-primary);
+            background: #ffffff;
+        }
+
+        .form__button {
+            width: 100%;
+            padding: 1rem 2rem;
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: #ffffff;
+            border: none;
+            border-radius: var(--border-radius);
+            outline: none;
+            cursor: pointer;
+            background: var(--color-primary);
+        }
+
+        .form__button:hover {
+            background: var(--color-primary-dark);
+        }
+
+        .form__button:active {
+            transform: scale(0.98);
+        }
+
+        .form__button:disabled {
+            background-color: #cc3333;
+        }
+    </style>
     <title>Document</title>
 </head>
+
 <body>
     <div class="login-card">
         <h1 class="app-name">Let's Win COVID</h1>
         <p class="description">Get COVID vaccine slot availability sent to you based on your location</p>
-        <form class="form" id="login" action="profile.html" method="POST">
+        <form class="form" id="login" action="profile" method="POST">
             <div class="login-error-message"></div>
             <div class="form__input-group">
                 <input type="text" name="name" class="form__input" autofocus placeholder="Username" required>
             </div>
             <div class="form__input-group">
-                <input type="number" class="form__input" name="age" placeholder="Enter your age" required min="1" max="200">
+                <input type="number" class="form__input" name="age" placeholder="Enter your age" required min="1"
+                    max="200">
             </div>
             <div class="form__input-group">
                 <input type="email" class="form__input" name="email" placeholder="Enter valid Email" required>
@@ -31,7 +123,52 @@
             <input type="hidden" name="pincode" id="locationpin"></input>
             <button class="form__button" type="submit">Login</button>
         </form>
-        <script src="./src/script.js"></script>
+        <script>
+            const locationdiv = document.querySelector("#location")
+            document.addEventListener('DOMContentLoaded', getLocation)
+            const btn = document.querySelector(".form__button");
+            const pincodeinput = document.querySelector("#locationpin")
+
+
+            function getLocation() {
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(showPosition, showError);
+                    btn.disabled = false;
+                } else {
+                    locationdiv.innerHTML = "Location permission is required";
+                    btn.disabled = true;
+                }
+            }
+
+            async function showPosition(position) {
+                const resp = await axios.get("https://apis.mapmyindia.com/advancedmaps/v1/3d55e2de5a3026eb364a88a598ff35d8/rev_geocode?lat=" + position.coords.latitude + "&lng=" + position.coords.longitude
+                )
+                const pincode = resp.data.results[0].pincode
+                pincodeinput.value = Number(pincode);
+            }
+
+            function showError(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        locationdiv.innerHTML = "Location permission is necessary for the app to work."
+                        btn.disabled = true;
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        locationdiv.innerHTML = "Location information is unavailable."
+                        btn.disabled = true;
+                        break;
+                    case error.TIMEOUT:
+                        locationdiv.innerHTML = "Location request timed out, try again"
+                        btn.disabled = true;
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        locationdiv.innerHTML = "An unknown error occurred."
+                        btn.disabled = true;
+                        break;
+                }
+            }
+        </script>
     </div>
 </body>
+
 </html>
