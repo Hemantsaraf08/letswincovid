@@ -1,0 +1,32 @@
+let a=document.querySelectorAll("div.mobile-hide")
+let a=document.querySelectorAll("a.totalslts")
+
+https://www.w3schools.com/css/css_pseudo_classes.asp
+
+
+//for dates 7 days
+
+let a=document.querySelectorAll("li.availability-date");
+for(let i=0;i<7;i++){
+	date=a[i].innerText;
+}
+
+for hosipal data  div ==>div.row.ng-star-inserted
+
+for hospital name==>
+cosnt selector="div.row-disp"
+arrayHospital=await tab.evaluate(fn, selector); 
+
+function fn(selector){
+	let c=document.querySelectorAll(selector);
+let res=Array.from(c)
+let required=res.filter(div=>div.classList.length===1)
+
+for(let i=0;i<required.length;i++){
+	let nameArr=required[0].innerText.split("\n\n");
+	
+}
+
+//GMAIL 
+letswincovidvaccineinfo@gmail.com
+NewProject123

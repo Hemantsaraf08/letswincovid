@@ -12,7 +12,9 @@
   "dependencies": {
     "cron": "^1.8.2",
     "express": "^4.17.1",
-    "express-handlebars": "^5.3.3"
+    "express-handlebars": "^5.3.3",
+    "nodemailer": "^6.6.3",
+    "puppeteer": "^10.2.0"
   },
   "devDependencies": {
     "nodemon": "^2.0.12"
