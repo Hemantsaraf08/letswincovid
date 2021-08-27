@@ -1,9 +1,12 @@
 const path=require("path")
 const express=require("express");
+const { CronJob } = require("cron");
 const app=express();
 const userArr=require("./userData");
 const PORT=process.env.PORT||3001;
- const {run, getTablestr}=require("./webscrapper/puppetAutomation");
+const {run, getTablestr, mailIsNotSent}=require("./webscrapper/puppetAutomation");
+// const {schedule}=require("./scheduler");
+const cronTime=2*60*1000;
 
 
 app.listen(PORT, ()=>console.log(`Server started on port ${PORT}`));
@@ -25,7 +28,7 @@ app.get("/login", (req, res)=>{
     res.sendFile(path.join(__dirname, "pages","login.html"))
 })
 const currUser=[];
-app.post("/result", (req, res)=>{
+app.post("/result",async (req, res)=>{
     const user={
         name:req.body.name,
         age: parseInt(req.body.age),
@@ -34,8 +37,23 @@ app.post("/result", (req, res)=>{
     }   
     currUser.push(user)
     // userArr.push(user);
+    await run(user);
 
-    run(user);
+    const fetchRemote = new CronJob("*/1 * * * *", async () => {
+        console.log("Puppeteer running from cron...");
+        run(user);
+      });
+      if(mailIsNotSent()) {
+          fetchRemote.start();
+      }else{
+          fetchRemote.stop();
+          console.log("scheduler stopped")
+      }
+
+    // if(mailIsNotSent()){
+    //     schedule(run, user, cronTime)
+    // }
+    // run(user);
     //Start Scheduler
 // require("./scheduler");
     // console.log(userArr);
@@ -45,13 +63,13 @@ app.post("/result", (req, res)=>{
 app.get("/profile", async (req, res)=>{
     // console.log("for profile page", currUser[0].name)
     let obj=currUser[0]
-    await run(obj)
+    // await run(obj)
     res.render("header", {
         name: currUser[0].name, 
         age: currUser[0].age, 
         Email: currUser[0].email,
         pincode: currUser[0].pincode,
-        table: getTablestr()
+        table: getTablestr()?getTablestr():`<h3>No slots available at present </h3>`
     })
     // currUser.pop();
 

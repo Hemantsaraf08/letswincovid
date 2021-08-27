@@ -14,9 +14,11 @@ const puppeteer = require('puppeteer');
 const {tableObjMaker, htmltablebuilder}=require('./driver.js');
 const {mailsender}=require('./email.js');
 let tablestr=""
-
+let mailNotSent=true;
 async function run(obj) {
     console.log("puppeteer running")
+    console.log("mail not sent is:",mailNotSent);
+
     try {
         
         let browser = await puppeteer.launch({
@@ -56,9 +58,10 @@ async function run(obj) {
             <h4>Thanks for using LetsWin Covid</h4>
             `
             await mailsender(obj.email, htmlstr);
+            mailNotSent=false;
             // console.log(htmlstr)          
         }
-        await tab.waitForTimeout();
+        await tab.waitForTimeout(500);
         await browser.close();
     } catch (err) {
         console.log(err);
@@ -69,3 +72,4 @@ const getTablestr=()=>tablestr
 
 module.exports.run=run;
 module.exports.getTablestr=getTablestr;
+module.exports.mailIsNotSent=()=>mailNotSent;
